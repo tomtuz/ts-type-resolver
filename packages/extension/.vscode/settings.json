@@ -9,4 +9,6 @@
     "typescript.tsc.autoDetect": "off",
     "editor.tabSize": 2,
     "typescript.tsserver.log": "verbose",
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true
 }

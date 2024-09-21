@@ -1,6 +1,18 @@
-import * as vscode from 'vscode'
+import vscode from 'vscode';
 import type { PrettifyRequest, TypeInfo } from './types'
 import { prettyPrintTypeString, getSyntaxKindDeclaration, stringifyTypeTree, sanitizeString } from './stringify-type-tree'
+
+interface CompletionInfoResponse {
+  body?: {
+    __prettifyResponse?: TypeInfo;
+  };
+}
+
+interface QuickInfoResponse {
+  body?: {
+    displayString?: string;
+  };
+}
 
 export function registerHoverProvider (context: vscode.ExtensionContext): void {
   async function provideHover (
@@ -34,14 +46,14 @@ export function registerHoverProvider (context: vscode.ExtensionContext): void {
       offset: position.character + 1
     }
 
-    const response: any = await vscode.commands.executeCommand(
+    const response: CompletionInfoResponse = await vscode.commands.executeCommand(
       'typescript.tsserverRequest',
       'completionInfo',
       {
         ...location,
         triggerCharacter: request
       }
-    )
+    );
 
     const prettifyResponse: TypeInfo | undefined = response?.body?.__prettifyResponse
     if (!prettifyResponse) return
@@ -53,18 +65,21 @@ export function registerHoverProvider (context: vscode.ExtensionContext): void {
     const declaration = getSyntaxKindDeclaration(syntaxKind, name)
 
     if (prettyTypeString.length > maxCharacters) {
-      prettyTypeString = prettyTypeString.substring(0, maxCharacters) + '...'
+      prettyTypeString = `${prettyTypeString.substring(0, maxCharacters)}...`;
     }
+
 
     // Ignore hover if the type is already displayed from TS quick info
     if (declaration.startsWith('type') || declaration.startsWith('const') || declaration.startsWith('function')) {
-      const quickInfo: any = await vscode.commands.executeCommand('typescript.tsserverRequest', 'quickinfo', location)
-      const quickInfoDisplayString: string = quickInfo?.body?.displayString
+      const quickInfo: QuickInfoResponse = await vscode.commands.executeCommand('typescript.tsserverRequest', 'quickinfo', location)
+      const quickInfoDisplayString: string | undefined = quickInfo?.body?.displayString;
 
-      const washedQuickInfo = sanitizeString(quickInfoDisplayString)
-      const washedType = sanitizeString(typeString.replace(/ } & { /g, ' '))
+      if (quickInfoDisplayString) {
+        const washedQuickInfo = sanitizeString(quickInfoDisplayString);
+        const washedType = sanitizeString(typeString.replace(/ } & { /g, ' '));
 
-      if (washedQuickInfo.includes(washedType)) return
+        if (washedQuickInfo.includes(washedType)) return;
+      }
     }
 
     const hoverText = new vscode.MarkdownString()

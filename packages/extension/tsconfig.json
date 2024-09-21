@@ -1,28 +1,25 @@
-// {
-//   "compilerOptions": {
-//     "module": "commonjs",
-//     "moduleResolution": "node",
-//     "target": "ES2020",
-//     "lib": ["ES2020"],
-//     "rootDir": "./src",
-//     "outDir": "./out",
-//     "noUncheckedIndexedAccess": true,
-//     "esModuleInterop": true,
-//     "strictNullChecks": true,
-//     "skipLibCheck": true,
-//     "sourceMap": true,
-//     "strict": true,
-//   },
-//   // "exclude": ["node_modules"]
-// }
-
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
     "rootDir": "./src",
-    "outDir": "./out",
-    "noUncheckedIndexedAccess": true,
-    "sourceMap": true
+    "paths": {
+      "typescript": ["./node_modules/typescript"],
+      "typescript/*": ["./node_modules/typescript/*"]
+    },
+    "typeRoots": ["./node_modules/@types"],
+    "outDir": "./out"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": ["../../node_modules/**/*"]
 }

@@ -11,10 +11,14 @@
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "build": "esbuild ./src/extension.ts --bundle --sourcemap --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "build2": "esbuild ./src/extension.ts --bundle --minify --sourcemap --outfile=out/extension.mjs --external:vscode --format=esm --platform=node",
+    "build3": "esbuild ./src/extension.ts --bundle --minify --sourcemap --outfile=out/extension.mjs --external:vscode --format=esm --platform=node --inject:./path-to-inject.js",
     "package": "vsce package --no-dependencies --allow-missing-repository --skip-license  -o ../../dist",
     "typecheck": "tsc --noEmit",
     "prestart": "node -e \"console.log('TypeScript path:', require.resolve('typescript'))\"",
-    "check-ts": "node -e \"console.log(require('typescript').version)\""
+    "check-ts": "node -e \"console.log(require('typescript').version)\"",
+    "postinstall": "node setup-symlinks.js",
+    "setup-workspace": "node ../../lib/setup-workspace.js"
   },
   "dependencies": {
     "ts-plugin": "workspace:*",
@@ -130,3 +134,4 @@
     }
   }
 }
+

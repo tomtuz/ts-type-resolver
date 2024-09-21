@@ -11,16 +11,18 @@
   "scripts": {
     "vscode:prepublish": "pnpm run build",
     "build": "esbuild ./src/extension.ts --bundle --sourcemap --outfile=out/extension.js --external:vscode --format=cjs --platform=node",
+    "build2": "esbuild ./src/extension.ts --bundle --minify --sourcemap --outfile=out/extension.mjs --external:vscode --format=esm --platform=node",
     "package": "vsce package --no-dependencies --allow-missing-repository --skip-license  -o ../../dist",
     "typecheck": "tsc --noEmit",
     "prestart": "node -e \"console.log('TypeScript path:', require.resolve('typescript'))\"",
-    "check-ts": "node -e \"console.log(require('typescript').version)\""
+    "check-ts": "node -e \"console.log(require('typescript').version)\"",
+    "postinstall": "node setup-symlinks.js",
+    "setup-workspace": "node ../../lib/setup-workspace.js"
   },
   "dependencies": {
     "ts-plugin": "workspace:*",
     "typescript": "^5.6.2",
-    "@vscode/vsce": "^3.1.0",
-    "@types/ts-expose-internals": "npm:ts-expose-internals@5.6.2"
+    "@vscode/vsce": "^3.1.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
@@ -43,62 +45,62 @@
   "contributes": {
     "typescriptServerPlugins": [
       {
-        "name": "@ts-resolver/typescript-plugin",
+        "name": "@prettify-ts/typescript-plugin",
         "enableForWorkspaceTypeScriptVersions": true
       }
     ],
     "configuration": {
-      "title": "DEV TS types",
+      "title": "Prettify TS",
       "properties": {
-        "ts-resolver.typeIndentation": {
+        "prettify-ts.typeIndentation": {
           "type": "number",
           "default": 4,
           "minimum": 0
         },
-        "ts-resolver.maxDepth": {
+        "prettify-ts.maxDepth": {
           "type": "number",
           "default": 1,
           "minimum": 0
         },
-        "ts-resolver.maxProperties": {
+        "prettify-ts.maxProperties": {
           "type": "number",
           "default": 1000,
           "minimum": 1,
           "description": "The maximum number of properties (including sub-properties) to show in a type preview. The number of lines shown will be at most this number."
         },
-        "ts-resolver.maxSubProperties": {
+        "prettify-ts.maxSubProperties": {
           "type": "number",
           "default": 10,
           "minimum": 1,
           "description": "The maximum number of properties to show in a nested (depth greater than 1) type."
         },
-        "ts-resolver.maxUnionMembers": {
+        "prettify-ts.maxUnionMembers": {
           "type": "number",
           "default": 15,
           "minimum": 1,
           "description": "The maximum number of members to show in a union."
         },
-        "ts-resolver.hidePrivateProperties": {
+        "prettify-ts.hidePrivateProperties": {
           "type": "boolean",
           "default": true,
           "description": "Hide private properties on an object."
         },
-        "ts-resolver.unwrapFunctions": {
+        "prettify-ts.unwrapFunctions": {
           "type": "boolean",
           "default": true,
           "description": "Prettify function parameters and return types."
         },
-        "ts-resolver.unwrapArrays": {
+        "prettify-ts.unwrapArrays": {
           "type": "boolean",
           "default": true,
           "description": "Prettify array element types."
         },
-        "ts-resolver.unwrapPromises": {
+        "prettify-ts.unwrapPromises": {
           "type": "boolean",
           "default": true,
           "description": "Prettify the resolved type of a promise."
         },
-        "ts-resolver.skippedTypeNames": {
+        "prettify-ts.skippedTypeNames": {
           "type": "array",
           "items": {
             "type": "string"
@@ -119,7 +121,7 @@
           ],
           "description": "Types that won't be unwrapped, by name."
         },
-        "ts-resolver.maxCharacters": {
+        "prettify-ts.maxCharacters": {
           "type": "number",
           "default": 20000,
           "minimum": 0,

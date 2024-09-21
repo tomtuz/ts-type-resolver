@@ -20,4 +20,4 @@ packages/*/out
 
 # Package Files
 *.vsix
-temp-package
+tests

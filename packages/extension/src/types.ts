@@ -1,4 +1,5 @@
-import type * as ts from 'typescript'
+import type { SyntaxKind } from 'typescript';
+
 
 export type TypeProperty = { name: string, readonly: boolean, type: TypeTree }
 export type TypeFunctionParameter = { name: string, isRestParameter: boolean, type: TypeTree }
@@ -23,7 +24,7 @@ export type TypeTree = { typeName: string } & (
  */
 export type TypeInfo = {
   typeTree: TypeTree
-  syntaxKind: ts.SyntaxKind
+  syntaxKind: SyntaxKind
   name: string
 }
 

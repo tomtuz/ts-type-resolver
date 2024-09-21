@@ -11,13 +11,8 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*", "packages/*"]
-    },
-    "outDir": "./dist"
+      "*": ["node_modules/*"]
+    }
   },
-  "include": [
-    "packages/**/*",
-    "scripts/**/*"
-  ],
-  "exclude": ["node_modules", "**/node_modules/*"]
+  "exclude": ["node_modules", "**/node_modules/*", "packages/**/*"]
 }

@@ -2,24 +2,35 @@
   "name": "ts-extension",
   "version": "0.1.5",
   "type": "module",
+  "private": true,
   "scripts": {
     "restart": "pnpm run clean && pnpm install && pnpm run build && pnpm run package && pnpm run build:script",
     "build": "pnpm -r run build",
     "build:plugin": "pnpm --filter ts-plugin build",
     "build:extension": "pnpm --filter ts-resolver build",
-    "load_deps": "tsx scripts/package-extension.ts",
-    "package": "pnpm --filter ts-resolver package",
-    "clean": "pnpm -r exec rimraf node_modules ./out",
+    "load_deps": "tsx ./scripts/package-extension.ts",
+    "package": "pnpm --filter ts-resolver package && pnpm exec rimraf ./dist/inspection && pnpm run unarchive",
+    "package2": "pnpm --filter ts-resolver install --prod && pnpm recursive prune --prod",
+    "pre-pack": "pnpm install --prod && pnpm -r prune --prod",
+    "pack": "pnpm -F ts-resolver run pre-pack",
+    "clean": "pnpm -r --no-bail exec rimraf node_modules ./out && pnpm exec rimraf ./node_modules",
     "typecheck": "pnpm -r run typecheck",
     "typecheck:plugin": "pnpm --filter ts-plugin typecheck",
     "typecheck:extension": "pnpm --filter ts-resolver typecheck",
-    "dep-check": "ncu --interactive --format group --workspace ts-resolver --workspace ts-plugin"
+    "unarchive": "unzip -o ./dist/ts-* -d ./dist/inspection/",
+    "dep-check": "ncu --interactive --format group --workspace ts-resolver --workspace ts-plugin",
+    "setup-workspace": "node lib/setup-workspace.js"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.5.5",
-    "chalk": "^5.3.0",
-    "npm-check-updates": "^17.1.2"
+    "fs-extra": "^11.2.0",
+    "js-yaml": "^4.1.0",
+    "npm-check-updates": "^17.1.2",
+    "picocolors": "^1.1.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
   },
   "packageManager": "pnpm@9.10.0"
 }
